@@ -223,15 +223,21 @@
 
         let menuVisible = false;
         const radius = 0.25;
-        const angles = [15, 75, 135, 195, 255, 315];
+        //const angles = [15, 75, 135, 195, 255, 315];
+        const leftX=-0.3;
+        const rightX=0.3;
+        const anglesY=[0.15, 0, -0.15];
 
         const toggleMenu = () => {
           menuVisible = !menuVisible;
 
           options.forEach((opt, i) => {
-            const rad = THREE.MathUtils.degToRad(angles[i]);
-            const x = radius * Math.cos(rad);
-            const y = radius * Math.sin(rad);
+            //const rad = THREE.MathUtils.degToRad(angles[i]);
+            //const x = radius * Math.cos(rad);
+            //const y = radius * Math.sin(rad);
+            const isLeft = i < 3; // First 3 options are on the left
+            const x = isLeft ? leftX : rightX; // Assign position based on left or right
+            const y = anglesY[i % 3]; // Set Y for each option (top, middle, bottom)
 
             if (menuVisible) {
               opt.setAttribute("visible", true);
@@ -264,7 +270,7 @@
                 dur: 200,
               });
 
-              // Delay hiding until after fade out
+              
               setTimeout(() => opt.setAttribute("visible", false), 300);
             }
           });
