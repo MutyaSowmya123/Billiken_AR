@@ -223,17 +223,49 @@
 
         let menuVisible = false;
         const radius = 0.25;
-        const angles = [-60, -90, -120, 60, 90, 120];
+        const angles = [15, 75, 135, 195, 255, 315];
 
         const toggleMenu = () => {
           menuVisible = !menuVisible;
+
           options.forEach((opt, i) => {
-            opt.setAttribute("visible", menuVisible);
+            const rad = THREE.MathUtils.degToRad(angles[i]);
+            const x = radius * Math.cos(rad);
+            const y = radius * Math.sin(rad);
+
             if (menuVisible) {
-              const rad = THREE.MathUtils.degToRad(angles[i]);
-              const x = radius * Math.cos(rad);
-              const y = radius * Math.sin(rad);
-              opt.setAttribute("position", `${x} ${y} 0`);
+              opt.setAttribute("visible", true);
+              opt.setAttribute("material", "opacity: 0");
+              opt.setAttribute("position", "0 0 0");
+
+              opt.setAttribute("animation__move", {
+                property: "position",
+                to: `${x} ${y} 0`,
+                dur: 1000,
+                easing: "easeOutElastic",
+              });
+
+              opt.setAttribute("animation__fade", {
+                property: "material.opacity",
+                to: 1,
+                dur: 300,
+              });
+            } else {
+              opt.setAttribute("animation__move", {
+                property: "position",
+                to: "0 0 0",
+                dur: 300,
+                easing: "easeInOutQuad",
+              });
+
+              opt.setAttribute("animation__fade", {
+                property: "material.opacity",
+                to: 0,
+                dur: 200,
+              });
+
+              // Delay hiding until after fade out
+              setTimeout(() => opt.setAttribute("visible", false), 300);
             }
           });
         };
