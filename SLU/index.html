@@ -11,7 +11,7 @@
   </head>
   <body>
     <a-scene
-      mindar-image="imageTargetSrc: /tempBilli4.mind"
+      mindar-image="imageTargetSrc: /tempBilli4.mind; showStats: false; uiScanning: yes;"
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
@@ -29,26 +29,22 @@
           src="/black_leather_chair.gltf"
         ></a-asset-item>
 
-        <img id="customTexture" src="/cenBilli.png" />
+        <img id="customTexture" src="/cenBilli2.png" />
         <img id="icon" src="/bill2.jpg" />
+        <audio id="bg-music" src="/Dreamers.mp3" preload="auto"></audio>
       </a-assets>
 
       <a-camera
         position="0 0 0"
         look-controls="enabled: false"
-        cursor="rayOrigin: mouse; fuse: false;"
-        raycaster="objects: .clickable; far: 100"
-      ></a-camera>
-
-      <!-- <a-entity
-        camera
-        cursor="rayOrigin: mouse"
-        raycaster="objects: .clickable"
-        position="0 0 0"
-      ></a-entity> -->
+        cursor="fuse: false; rayOrigin: mouse;"
+        raycaster="far: 10000; objects: .clickable"
+      >
+      </a-camera>
 
       <a-entity
         mindar-image-target="targetIndex: 0"
+        interactive-cube-manager
         smooth="true"
         smoothCount="10"
         smoothTolerance="0.01"
@@ -81,6 +77,18 @@
           width="2"
           side="double"
         ></a-text> -->
+
+        <a-entity
+          id="speaker"
+          sound="src: #bg-music; autoplay: false; volume: 1"
+          position="0 2 5"
+        ></a-entity>
+
+        <!-- <a-sound
+          id="speaker"
+          src="src: url(Dreamers.mp3)"
+          position="0 2 5"
+        ></a-sound> -->
 
         <a-entity raycaster="objects: .clickable" cursor></a-entity>
 
@@ -154,19 +162,15 @@
           smoothThreshold="5"
         ></a-entity>
 
-        <a-entity
-          id="menu-button"
+        <a-sphere
+          id="myInteractiveSphere"
           class="clickable"
-          tap-listener
-          geometry="primitive: circle; radius: 0.15"
-          material="src: #customTexture; side: double"
           position="0 0 0"
-          rotation="0 0 0"
-          smooth="true"
-          smoothCount="10"
-          smoothTolerance="0.01"
-          smoothThreshold="5"
-        ></a-entity>
+          scale="0.15 0.15 0.05"
+          material="src: #customTexture; repeat: 1 1; offset: 0 0"
+          visible="false"
+        >
+        </a-sphere>
 
         <a-entity
           id="option1"
@@ -204,149 +208,19 @@
           material="src: #icon"
           visible="false"
         ></a-entity>
+
+        <a-entity
+          id="audio-toggle"
+          class="clickable"
+          geometry="primitive: circle; radius: 0.07"
+          material="color: green; opacity: 0.8"
+          position="0.3 0 0"
+          visible="false"
+        ></a-entity>
       </a-entity>
     </a-scene>
 
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const center = document.querySelector("#menu-button");
-        const options = [
-          document.querySelector("#option1"),
-          document.querySelector("#option2"),
-          document.querySelector("#option3"),
-          document.querySelector("#option4"),
-          document.querySelector("#option5"),
-          document.querySelector("#option6"),
-        ];
-
-        let menuVisible = false;
-        const radius = 0.25;
-        //const angles = [15, 75, 135, 195, 255, 315];
-        const leftX=-0.3;
-        const rightX=0.3;
-        const anglesY=[0.15, 0, -0.15];
-
-        const toggleMenu = () => {
-          menuVisible = !menuVisible;
-
-          options.forEach((opt, i) => {
-            //const rad = THREE.MathUtils.degToRad(angles[i]);
-            //const x = radius * Math.cos(rad);
-            //const y = radius * Math.sin(rad);
-            const isLeft = i < 3; // First 3 options are on the left
-            const x = isLeft ? leftX : rightX; // Assign position based on left or right
-            const y = anglesY[i % 3]; // Set Y for each option (top, middle, bottom)
-
-            if (menuVisible) {
-              opt.setAttribute("visible", true);
-              opt.setAttribute("material", "opacity: 0");
-              opt.setAttribute("position", "0 0 0");
-
-              opt.setAttribute("animation__move", {
-                property: "position",
-                to: `${x} ${y} 0`,
-                dur: 1000,
-                easing: "easeOutElastic",
-              });
-
-              opt.setAttribute("animation__fade", {
-                property: "material.opacity",
-                to: 1,
-                dur: 300,
-              });
-            } else {
-              opt.setAttribute("animation__move", {
-                property: "position",
-                to: "0 0 0",
-                dur: 300,
-                easing: "easeInOutQuad",
-              });
-
-              opt.setAttribute("animation__fade", {
-                property: "material.opacity",
-                to: 0,
-                dur: 200,
-              });
-
-              
-              setTimeout(() => opt.setAttribute("visible", false), 300);
-            }
-          });
-        };
-
-        // Use 'mousedown' and 'mouseup' which A-Frame often maps to touch events
-        center.addEventListener("mousedown", (event) => {
-          console.log("Center button mousedown/touchstart");
-          event.preventDefault();
-        });
-
-        center.addEventListener("mouseup", (event) => {
-          console.log("Center button mouseup/touchend");
-          event.preventDefault();
-          toggleMenu();
-        });
-
-        const clickableElements = document.querySelectorAll(".clickable");
-        clickableElements.forEach((element) => {
-          element.addEventListener("mousedown", (event) => {
-            console.log(
-              `${element.id || element.className} mousedown/touchstart`
-            );
-            event.preventDefault();
-          });
-          element.addEventListener("mouseup", (event) => {
-            console.log(`${element.id || element.className} mouseup/touchend`);
-            event.preventDefault();
-          });
-        });
-      });
-
-      // document.addEventListener("DOMContentLoaded", () => {
-      //   const center = document.querySelector("#menu-button");
-      //   const options = [
-      //     document.querySelector("#option1"),
-      //     document.querySelector("#option2"),
-      //     document.querySelector("#option3"),
-      //     document.querySelector("#option4"),
-      //     document.querySelector("#option5"),
-      //     document.querySelector("#option6"),
-      //   ];
-
-      //   let menuVisible = false;
-
-      //   const radius = 0.25; // distance from center
-      //   const angles = [-60, -90, -120, 60, 90, 120]; // degrees for radial layout
-
-      //   center.addEventListener("click", () => {
-      //     menuVisible = !menuVisible;
-
-      //     options.forEach((opt, i) => {
-      //       opt.setAttribute("visible", menuVisible);
-      //       if (menuVisible) {
-      //         const rad = THREE.MathUtils.degToRad(angles[i]);
-      //         const x = radius * Math.cos(rad);
-      //         const y = radius * Math.sin(rad);
-      //         opt.setAttribute("position", ${x} ${y} 0);
-      //       }
-      //     });
-      //   });
-      // });
-
-      // const center = document.querySelector(".clickable");
-      // center.addEventListener("click", (event) => {
-      //   console.log("Am clicked");
-      // });
-
-      // document.addEventListener("DOMContentLoaded", function () {
-      //   console.log("DOM fully loaded and parsed");
-      //   // You can safely access and manipulate DOM elements here
-      //   const center = document.querySelector("#menu-button");
-      //   center.addEventListener("click", (event) => {
-      //     console.log("Am clicked!");
-      //   });
-      // });
-    </script>
   </body>
 </html>
