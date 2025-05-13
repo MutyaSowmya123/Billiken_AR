@@ -18,6 +18,11 @@
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
+        <!-- <img
+          id="card"
+          src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.png"
+        /> -->
+
         <!-- Replace this with your own model -->
         <a-asset-item
           id="customModel"
@@ -26,13 +31,6 @@
 
         <img id="customTexture" src="/cenBilli2.png" />
         <img id="icon" src="/bill2.jpg" />
-        <img id="icon-web" src="/web icon.png" />
-        <img id="icon-x" src="x-icon.jpg" />
-        <img id="icon-yt" src="yt-icon.png" />
-        <img id="icon-tt" src="TT-icon.png" />
-        <img id="icon-li" src="li-icon.png" />
-        <img id="icon-fb" src="fb-icon.png" />
-        <img id="icon-insta" src="insta-icon.png" />
         <audio id="bg-music" src="/Dreamers.mp3" preload="auto"></audio>
       </a-assets>
 
@@ -85,6 +83,12 @@
           sound="src: #bg-music; autoplay: false; volume: 1"
           position="0 2 5"
         ></a-entity>
+
+        <!-- <a-sound
+          id="speaker"
+          src="src: url(Dreamers.mp3)"
+          position="0 2 5"
+        ></a-sound> -->
 
         <a-entity raycaster="objects: .clickable" cursor></a-entity>
 
@@ -170,11 +174,11 @@
         <!-- LEFT side -->
         <a-entity
           id="option1"
-          geometry="primitive: plane; width: 0.2; height: 0.1"
+          geometry="primitive: plane; width: 0.25; height: 0.1"
           material="color: #003aa7; opacity: 0.8"
           position="0 0 0"
           visible="false"
-          animation__show="property: position; to: -0.3 0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option1"
+          animation__show="property: position; to: -0.2 0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option1"
           animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option1"
         >
           <!-- Icon inside rectangle box -->
@@ -187,7 +191,7 @@
 
         <a-entity
           id="option2"
-          geometry="primitive: plane; width: 0.2; height: 0.1"
+          geometry="primitive: plane; width: 0.25; height: 0.1"
           material="color: #003aa7; opacity: 0.8"
           position="0 0 0"
           visible="false"
@@ -204,11 +208,11 @@
 
         <a-entity
           id="option3"
-          geometry="primitive: plane; width: 0.2; height: 0.1"
+          geometry="primitive: plane; width: 0.25; height: 0.1"
           material="color: #003aa7; opacity: 0.8"
           position="0 0 0"
           visible="false"
-          animation__show="property: position; to: -0.3 -0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option3"
+          animation__show="property: position; to: -0.2 -0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option3"
           animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option3"
         >
           <!-- Icon inside rectangle box -->
@@ -222,11 +226,11 @@
         <!-- RIGHT side -->
         <a-entity
           id="option4"
-          geometry="primitive: plane; width: 0.2; height: 0.1"
+          geometry="primitive: plane; width: 0.25; height: 0.1"
           material="color: #003aa7; opacity: 0.8"
           position="0 0 0"
           visible="false"
-          animation__show="property: position; to: 0.3 0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option4"
+          animation__show="property: position; to: 0.2 0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option4"
           animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option4"
         >
           <!-- Icon inside rectangle box -->
@@ -239,7 +243,7 @@
 
         <a-entity
           id="option5"
-          geometry="primitive: plane; width: 0.2; height: 0.1"
+          geometry="primitive: plane; width: 0.25; height: 0.1"
           material="color: #003aa7; opacity: 0.8"
           position="0 0 0"
           visible="false"
@@ -256,11 +260,11 @@
 
         <a-entity
           id="option6"
-          geometry="primitive: plane; width: 0.2; height: 0.1"
+          geometry="primitive: plane; width: 0.25; height: 0.1"
           material="color: #003aa7; opacity: 0.8"
           position="0 0 0"
           visible="false"
-          animation__show="property: position; to: 0.3 -0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option6"
+          animation__show="property: position; to: 0.2 -0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option6"
           animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option6"
         >
           <!-- Icon inside rectangle box -->
@@ -271,62 +275,14 @@
           ></a-entity>
         </a-entity>
 
-        <a-image
+        <a-entity
+          id="audio-toggle"
+          class="clickable"
+          geometry="primitive: circle; radius: 0.07"
+          material="color: green; opacity: 0.8"
+          position="0.3 0 0"
           visible="false"
-          id="web-button"
-          class="clickable"
-          src="#icon-web"
-          position="-0.42 -0.4 0"
-          height="0.10"
-          width="0.10"
-          animation="property: scale; to: 1.2 1.2 1.2; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
-        ></a-image>
-
-        <a-image
-          visible="false"
-          id="fb-button"
-          class="clickable"
-          src="#icon-fb"
-          alpha-test="0.5"
-          position="-0.14 -0.4 0"
-          height="0.10"
-          width="0.10"
-          animation="property: scale; to: 1.2 1.2 1.2; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
-        ></a-image>
-
-        <a-image
-          visible="false"
-          id="insta-button"
-          class="clickable"
-          src="#icon-insta"
-          position="0.14 -0.4 0"
-          height="0.10"
-          width="0.10"
-          animation="property: scale; to: 1.2 1.2 1.2; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
-        ></a-image>
-
-        <a-image
-          visible="false"
-          id="li-button"
-          class="clickable"
-          src="#icon-li"
-          position="0.42 -0.4 0"
-          height="0.10"
-          width="0.10"
-          animation="property: scale; to: 1.2 1.2 1.2; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
-        ></a-image>
-
-        <!-- <a-text
-          id="text"
-          class="clickable"
-          value=""
-          color="black"
-          align="center"
-          width="2"
-          position="0 -1 0"
-          geometry="primitive:plane; height: 0.1; width: 2;"
-          material="opacity: 0.5"
-        ></a-text> -->
+        ></a-entity>
       </a-entity>
     </a-scene>
 
