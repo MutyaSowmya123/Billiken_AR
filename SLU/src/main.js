@@ -1,3 +1,106 @@
+let y = 0;
+const showInfo = () => {
+  y = 1;
+  const webButton = document.querySelector("#web-button");
+  const fbButton = document.querySelector("#fb-button");
+  const instaButton = document.querySelector("#insta-button");
+  const liButton = document.querySelector("#li-button");
+  // const text = document.querySelector("#text");
+
+  webButton.setAttribute("visible", true);
+  setTimeout(() => {
+    fbButton.setAttribute("visible", true);
+  }, 100);
+  setTimeout(() => {
+    instaButton.setAttribute("visible", true);
+  }, 120);
+  setTimeout(() => {
+    liButton.setAttribute("visible", true);
+  }, 140);
+
+  let currentTab = '';
+  webButton.addEventListener('click', function (evt) {
+    // text.setAttribute("value", "https://www.slu.edu/");
+    if(webButton.getAttribute("visible") === true){
+      window.location.href = "https://www.slu.edu/";
+      currentTab = 'web';
+    }
+  });
+  instaButton.addEventListener('click', function (evt) {
+    // text.setAttribute("value", "https://www.instagram.com/slu_official/");
+    window.location.href = "https://www.instagram.com/slu_official/";
+    currentTab = 'instagram';
+  });
+  fbButton.addEventListener('click', function (evt) {
+    // text.setAttribute("value", "https://www.facebook.com/SaintLouisU/");
+    window.location.href = "https://www.facebook.com/SaintLouisU/";
+    currentTab = 'facebook';
+  });
+  liButton.addEventListener('click', function (evt) {
+    console.log("Li");
+    // text.setAttribute("value", "https://www.linkedin.com/school/saint-louis-university/posts/?feedView=all");
+    window.location.href = "https://www.linkedin.com/school/saint-louis-university/posts/?feedView=all";
+    currentTab = 'LinkedIn';
+  });
+
+  // text.addEventListener('click', function (evt) {
+  //   if (currentTab === 'web') {
+  //     window.location.href="https://www.slu.edu/";
+  //   }
+  // });
+}
+
+const noInfo = () => {
+  const webButton = document.querySelector("#web-button");
+  const fbButton = document.querySelector("#fb-button");
+  const instaButton = document.querySelector("#insta-button");
+  const liButton = document.querySelector("#li-button");
+  // const text = document.querySelector("#text");
+
+  liButton.setAttribute("visible", false);
+  setTimeout(() => {
+    instaButton.setAttribute("visible", false);
+  }, 100);
+  setTimeout(() => {
+    fbButton.setAttribute("visible", false);
+  }, 120);
+  setTimeout(() => {
+    webButton.setAttribute("visible", false);
+  }, 140);
+
+  let currentTab = '';
+  webButton.addEventListener('click', function (evt) {
+    // text.setAttribute("value", "https://www.slu.edu/");
+    currentTab = "web";
+    
+    
+  });
+  instaButton.addEventListener('click', function (evt) {
+    // text.setAttribute("value", "https://www.instagram.com/slu_official/");
+    currentTab = 'instagram';
+    console.log("NOPE!", currentTab);
+  });
+  fbButton.addEventListener('click', function (evt) {
+    // text.setAttribute("value", "https://www.facebook.com/SaintLouisU/");
+    currentTab = 'facebook';
+    console.log("NOPE!", currentTab);
+  });
+  liButton.addEventListener('click', function (evt) {
+    console.log("Li");
+    // text.setAttribute("value", "https://www.linkedin.com/school/saint-louis-university/posts/?feedView=all");
+    currentTab = 'LinkedIn';
+    console.log("NOPE!", currentTab);
+  });
+
+  // text.addEventListener('click', function (evt) {
+  //   if (currentTab === 'web') {
+  //     window.location.href="https://www.slu.edu/";
+  //   }
+  // });
+}
+
+
+
 AFRAME.registerComponent("interactive-cube-manager", {
     init: function () {
       // Log when the component initializes
@@ -48,6 +151,11 @@ AFRAME.registerComponent("interactive-cube-manager", {
 
       let isRed = false;
       let toggleMenu = false;
+      menuEntity.addEventListener("dblclick", function (event) {
+        console.log("double!");
+        return;
+        
+      });
 
       // Event listener for click events on the cube
       menuEntity.addEventListener("click", function () {
@@ -73,6 +181,7 @@ AFRAME.registerComponent("interactive-cube-manager", {
             src: "/cenBilli2.png" // keep the texture
           });
           console.log("Applied red tint over texture");
+          showInfo();
           const options = [
             document.querySelector("#option1"),
             document.querySelector("#option2"),
@@ -105,6 +214,8 @@ AFRAME.registerComponent("interactive-cube-manager", {
             src: "/cenBilli2.png" // restore the texture
           });
           console.log("Removed red tint, restored texture");
+          y = 0;
+          noInfo();
           toggleMenu();
         }
       
@@ -116,6 +227,8 @@ AFRAME.registerComponent("interactive-cube-manager", {
     },
   });
 
+
+  
 
 
 
