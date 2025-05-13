@@ -171,65 +171,109 @@
           visible="false"
         >
         </a-sphere>
+        <!-- LEFT side -->
         <a-entity
           id="option1"
-          geometry="primitive: circle; radius: 0.05"
-          material="src: #icon"
+          geometry="primitive: plane; width: 0.25; height: 0.1"
+          material="color: #003aa7; opacity: 0.8"
           position="0 0 0"
           visible="false"
           animation__show="property: position; to: -0.2 0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option1"
           animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option1"
-        ></a-entity>
+        >
+          <!-- Icon inside rectangle box -->
+          <a-entity
+            geometry="primitive: circle; radius: 0.04"
+            material="src: #icon"
+            position="0 0 0.01"
+          ></a-entity>
+        </a-entity>
 
         <a-entity
           id="option2"
-          geometry="primitive: circle; radius: 0.05"
-          material="src: #icon"
+          geometry="primitive: plane; width: 0.25; height: 0.1"
+          material="color: #003aa7; opacity: 0.8"
           position="0 0 0"
           visible="false"
-          animation__show="property: position; to: 0.2 0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option2"
+          animation__show="property: position; to: -0.3 0 0; dur: 600; easing: easeOutElastic; startEvents: show-option2"
           animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option2"
-        ></a-entity>
+        >
+          <!-- Icon inside rectangle box -->
+          <a-entity
+            geometry="primitive: circle; radius: 0.04"
+            material="src: #icon"
+            position="0 0 0.01"
+          ></a-entity>
+        </a-entity>
 
         <a-entity
           id="option3"
-          geometry="primitive: circle; radius: 0.05"
-          material="src: #icon"
+          geometry="primitive: plane; width: 0.25; height: 0.1"
+          material="color: #003aa7; opacity: 0.8"
           position="0 0 0"
           visible="false"
           animation__show="property: position; to: -0.2 -0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option3"
           animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option3"
-        ></a-entity>
+        >
+          <!-- Icon inside rectangle box -->
+          <a-entity
+            geometry="primitive: circle; radius: 0.04"
+            material="src: #icon"
+            position="0 0 0.01"
+          ></a-entity>
+        </a-entity>
 
+        <!-- RIGHT side -->
         <a-entity
           id="option4"
-          geometry="primitive: circle; radius: 0.05"
-          material="src: #icon"
+          geometry="primitive: plane; width: 0.25; height: 0.1"
+          material="color: #003aa7; opacity: 0.8"
           position="0 0 0"
           visible="false"
-          animation__show="property: position; to: 0.2 -0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option4"
+          animation__show="property: position; to: 0.2 0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option4"
           animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option4"
-        ></a-entity>
+        >
+          <!-- Icon inside rectangle box -->
+          <a-entity
+            geometry="primitive: circle; radius: 0.04"
+            material="src: #icon"
+            position="0 0 0.01"
+          ></a-entity>
+        </a-entity>
 
         <a-entity
           id="option5"
-          geometry="primitive: circle; radius: 0.05"
-          material="src: #icon"
+          geometry="primitive: plane; width: 0.25; height: 0.1"
+          material="color: #003aa7; opacity: 0.8"
           position="0 0 0"
           visible="false"
-          animation__show="property: position; to: 0 0.3 0; dur: 600; easing: easeOutElastic; startEvents: show-option5"
+          animation__show="property: position; to: 0.3 0 0; dur: 600; easing: easeOutElastic; startEvents: show-option5"
           animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option5"
-        ></a-entity>
+        >
+          <!-- Icon inside rectangle box -->
+          <a-entity
+            geometry="primitive: circle; radius: 0.04"
+            material="src: #icon"
+            position="0 0 0.01"
+          ></a-entity>
+        </a-entity>
 
         <a-entity
           id="option6"
-          geometry="primitive: circle; radius: 0.05"
-          material="src: #icon"
+          geometry="primitive: plane; width: 0.25; height: 0.1"
+          material="color: #003aa7; opacity: 0.8"
           position="0 0 0"
           visible="false"
-          animation__show="property: position; to: 0 -0.3 0; dur: 600; easing: easeOutElastic; startEvents: show-option6"
+          animation__show="property: position; to: 0.2 -0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option6"
           animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option6"
-        ></a-entity>
+        >
+          <!-- Icon inside rectangle box -->
+          <a-entity
+            geometry="primitive: circle; radius: 0.04"
+            material="src: #icon"
+            position="0 0 0.01"
+          ></a-entity>
+        </a-entity>
 
         <a-entity
           id="audio-toggle"
@@ -254,12 +298,12 @@
         "option5",
         "option6",
       ];
-    
+
       let isExpanded = false;
-    
+
       document.addEventListener("DOMContentLoaded", () => {
         const trigger = document.querySelector("#myInteractiveSphere");
-    
+
         trigger.addEventListener("click", () => {
           popupIds.forEach((id) => {
             const el = document.querySelector(`#${id}`);
@@ -270,10 +314,10 @@
               el.emit(`hide-${id}`);
             }
           });
-    
+
           isExpanded = !isExpanded;
         });
-    
+
         // Handle hiding after animation ends
         popupIds.forEach((id) => {
           const el = document.querySelector(`#${id}`);
@@ -285,6 +329,5 @@
         });
       });
     </script>
-    
   </body>
 </html>
