@@ -79,10 +79,16 @@
         ></a-text> -->
 
         <a-entity
-          id="audio-source"
-          sound="src: #bg-music; autoplay: false; loop: true"
-          position="0 0 0"
+          id="speaker"
+          sound="src: #bg-music; autoplay: false; volume: 1"
+          position="0 2 5"
         ></a-entity>
+
+        <!-- <a-sound
+          id="speaker"
+          src="src: url(Dreamers.mp3)"
+          position="0 2 5"
+        ></a-sound> -->
 
         <a-entity raycaster="objects: .clickable" cursor></a-entity>
 
