@@ -91,6 +91,11 @@ AFRAME.registerComponent("interactive-cube-manager", {
     const targetEntity = this.el; // 'this.el' is the <a-entity mindar-image-target>
     // Select the cube using its ID 'myInteractiveCube'
     const menuEntity = document.querySelector("#myInteractiveSphere");
+
+    const photoViewer = document.querySelector("#photo-viewer");
+    const photoBack = document.querySelector("#photo-back");
+    const photoNext = document.querySelector("#photo-next");
+    const photoPrev = document.querySelector("#photo-prev");
     // const speakerEntity = document.querySelector("#speaker");
     const audio = document.querySelector("#bg-music");
     let music = false;
@@ -167,6 +172,78 @@ AFRAME.registerComponent("interactive-cube-manager", {
           "option5",
           "option6",
         ];
+
+        const allUIIds = [
+          "option1",
+          "option2",
+          "option3",
+          "option4",
+          "option5",
+          "option6",
+          "web-button",
+          "fb-button",
+          "insta-button",
+          "li-button",
+          "myInteractiveSphere",
+        ];
+
+        const option3 = document.querySelector("#option3");
+        if (option3) {
+          option3.addEventListener("click", () => {
+            console.log("Option 3 clicked: Opening photo viewer");
+            showPhotoViewer();
+          });
+        }
+
+        const photos = ["#photo1", "#photo2", "#photo3"];
+        let currentPhoto = 0;
+
+        function hideAllUI() {
+          allUIIds.forEach((id) => {
+            const el = document.querySelector(`#${id}`);
+            if (el) el.setAttribute("visible", false);
+          });
+        }
+
+        function showAllUI() {
+          allUIIds.forEach((id) => {
+            const el = document.querySelector(`#${id}`);
+            if (el) el.setAttribute("visible", true);
+          });
+        }
+
+        function showPhotoViewer() {
+          hideAllUI();
+          photoViewer.setAttribute("visible", true);
+          photoBack.setAttribute("visible", true);
+          photoNext.setAttribute("visible", true);
+          photoPrev.setAttribute("visible", true);
+          photoViewer.setAttribute("src", photos[currentPhoto]);
+        }
+
+        function hidePhotoViewer() {
+          photoViewer.setAttribute("visible", false);
+          photoBack.setAttribute("visible", false);
+          photoNext.setAttribute("visible", false);
+          photoPrev.setAttribute("visible", false);
+          showAllUI();
+        }
+
+        // Event listeners
+        photoNext.addEventListener("click", () => {
+          currentPhoto = (currentPhoto + 1) % photos.length;
+          photoViewer.setAttribute("src", photos[currentPhoto]);
+        });
+
+        photoPrev.addEventListener("click", () => {
+          currentPhoto = (currentPhoto - 1 + photos.length) % photos.length;
+          photoViewer.setAttribute("src", photos[currentPhoto]);
+        });
+
+        photoBack.addEventListener("click", () => {
+          hidePhotoViewer();
+        });
+
         let isExpanded = false;
         toggleMenu = () => {
           popupIds.forEach((id) => {
