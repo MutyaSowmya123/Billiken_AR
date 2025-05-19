@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Dynamic Marker Selector</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+		<style>
+			@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap");
+
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				background: radial-gradient(
+					ellipse at center,
+					#0f0f1d 0%,
+					#000000 100%
+				);
+				font-family: "Orbitron", sans-serif;
+				color: #00ffee;
+			}
+
+			#marker-ui {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				z-index: 10;
+				background: rgba(0, 20, 40, 0.85);
+				backdrop-filter: blur(12px);
+				border: 2px solid #00ffee99;
+				border-radius: 16px;
+				padding: 40px 50px;
+				box-shadow: 0 0 25px #00ffee66;
+				text-align: center;
+				animation: pulseBox 2s infinite;
+			}
+
+			#marker-ui label {
+				font-size: 18px;
+				margin-bottom: 10px;
+				display: block;
+			}
+
+			#markerSelect {
+				font-size: 16px;
+				padding: 10px 20px;
+				border-radius: 8px;
+				background: #0a0a1a;
+				border: 1px solid #00ffee66;
+				color: #00ffee;
+				box-shadow: inset 0 0 8px #00ffee33;
+				transition: 0.3s;
+			}
+
+			#markerSelect:hover {
+				background: #111133;
+				box-shadow: 0 0 10px #00ffeeaa;
+			}
+
+			#startAR {
+				margin-top: 20px;
+				font-size: 16px;
+				padding: 12px 28px;
+				border-radius: 10px;
+				border: none;
+				background: #00ffee;
+				color: #000;
+				cursor: pointer;
+				font-weight: bold;
+				box-shadow: 0 0 20px #00ffeeaa;
+				transition: transform 0.2s, box-shadow 0.2s;
+			}
+
+			#startAR:hover {
+				transform: scale(1.05);
+				box-shadow: 0 0 30px #00ffee;
+			}
+
+			@keyframes pulseBox {
+				0%,
+				100% {
+					box-shadow: 0 0 20px #00ffee55;
+				}
+				50% {
+					box-shadow: 0 0 30px #00ffeeaa;
+				}
+			}
+
+			#billiken-inside {
+				width: 100px;
+				margin: 0 auto 20px;
+				animation: floaty 4s ease-in-out infinite;
+				pointer-events: none;
+				filter: drop-shadow(0 0 10px #00ffeeaa);
+			}
+
+			@keyframes floaty {
+				0%,
+				100% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(-10px);
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		<!-- Marker Selection UI with Billiken -->
+		<div id="marker-ui">
+			<img id="billiken-inside" src="/billiken.png" alt="Billiken Mascot" />
+			<label for="markerSelect">Choose Marker:</label>
+			<select id="markerSelect">
+				<option value="slu1.mind">SLU Marker</option>
+				<option value="tempBilli4.mind">Billiken Marker</option>
+			</select>
+			<br />
+			<button id="startAR">Start AR</button>
+		</div>
+
+		<script>
+			window.addEventListener("DOMContentLoaded", () => {
+				const startBtn = document.getElementById("startAR");
+				const select = document.getElementById("markerSelect");
+				const ui = document.getElementById("marker-ui");
+
+				startBtn.addEventListener("click", () => {
+					const selectedMind = select.value;
+					ui.style.display = "none";
+					document.body.style.background = "transparent"; // remove dark bg for AR view
+
+					document.body.innerHTML += `
+						<a-scene
+							mindar-image="imageTargetSrc: /${selectedMind}; autoStart: true"
+							color-space="sRGB"
+							renderer="colorManagement: true, physicallyCorrectLights"
+							vr-mode-ui="enabled: false"
+							device-orientation-permission-ui="enabled: true"
+							embedded
+						>
+							<a-assets>
+								<img id="box-texture" src="/cenBilli2.png" />
+							</a-assets>
+
+							<a-camera
+								position="0 0 0"
+								look-controls="enabled: false"
+								cursor="fuse: false; rayOrigin: mouse;"
+								raycaster="far: 10000; objects: .clickable"
+							></a-camera>
+
+							<a-entity mindar-image-target="targetIndex: 0">
+								<a-box
+									position="0 0 0.1"
+									rotation="0 45 0"
+									width="0.5"
+									height="0.5"
+									depth="0.5"
+									color="#FFC65D"
+									animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"
+								></a-box>
+
+								<a-text
+									value="Marker Detected!"
+									color="#003aa7"
+									position="0 -0.6 0.1"
+									align="center"
+									width="3"
+								></a-text>
+
+								<a-light type="directional" position="0 1 1" intensity="1.2"></a-light>
+							</a-entity>
+						</a-scene>
+					`;
+				});
+			});
+		</script>
+	</body>
+</html>

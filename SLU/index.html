@@ -1,386 +1,501 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/aframe-text-geometry-component@0.5.2/dist/aframe-text-geometry-component.min.js"></script>
-    <title>Billiken-AR🚀</title>
-  </head>
-  <body>
-    <a-scene
-      mindar-image="imageTargetSrc: /tempBilli4.mind; showStats: false; uiScanning: yes;"
-      color-space="sRGB"
-      renderer="colorManagement: true, physicallyCorrectLights"
-      vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: false"
-    >
-      <a-assets>
-        <!-- Replace this with your own model -->
-        <a-asset-item
-          id="customModel"
-          src="/black_leather_chair.gltf"
-        ></a-asset-item>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Dynamic Marker Selector</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/aframe-text-geometry-component@0.5.2/dist/aframe-text-geometry-component.min.js"></script>
+		<style>
+			@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap");
 
-        <img id="customTexture" src="/cenBilli2.png" />
-        <img id="icon" src="/bill2.jpg" />
-        <img id="icon-web" src="/web icon.png" />
-        <img id="icon-x" src="x-icon.jpg" />
-        <img id="icon-yt" src="yt-icon.png" />
-        <img id="icon-tt" src="TT-icon.png" />
-        <img id="icon-li" src="li-icon.png" />
-        <img id="icon-fb" src="fb-icon.png" />
-        <img id="icon-insta" src="insta-icon.png" />
-        <img id="icon-back" src="/back-icon.png" />
-        <img id="icon-left" src="/left-icon.png" />
-        <img id="icon-right" src="/right-icon.png" />
-        <img id="some-photo" src="/photo1.jpg" />
-        <audio id="bg-music" src="/Dreamers.mp3" preload="auto"></audio>
-      </a-assets>
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				background: radial-gradient(
+					ellipse at center,
+					#0f0f1d 0%,
+					#000000 100%
+				);
+				font-family: "Orbitron", sans-serif;
+				color: #00ffee;
+			}
 
-      <a-camera
-        position="0 0 0"
-        look-controls="enabled: false"
-        cursor="fuse: false; rayOrigin: mouse;"
-        raycaster="far: 10000; objects: .clickable"
-      >
-      </a-camera>
+			#marker-ui {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				z-index: 10;
+				background: rgba(0, 20, 40, 0.85);
+				backdrop-filter: blur(12px);
+				border: 2px solid #00ffee99;
+				border-radius: 16px;
+				padding: 40px 50px;
+				box-shadow: 0 0 25px #00ffee66;
+				text-align: center;
+				animation: pulseBox 2s infinite;
+			}
 
-      <a-entity
-        mindar-image-target="targetIndex: 0"
-        interactive-cube-manager
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5"
-      >
-        <!-- <a-plane
-          src="#card"
-          position="0 0 0"
-          height="0.552"
-          width="1"
-          rotation="0 0 0"
-        ></a-plane> -->
+			#marker-ui label {
+				font-size: 18px;
+				margin-bottom: 10px;
+				display: block;
+			}
 
-        <!-- Custom model with animation -->
-        <!-- <a-gltf-model
-          id="model"
-          src="#customModel"
-          position="0 0 0.1"
-          scale="0.3 0.3 0.3"
-          rotation="90 0 0"
-        ></a-gltf-model> -->
+			#markerSelect {
+				font-size: 16px;
+				padding: 10px 20px;
+				border-radius: 8px;
+				background: #0a0a1a;
+				border: 1px solid #00ffee66;
+				color: #00ffee;
+				box-shadow: inset 0 0 8px #00ffee33;
+				transition: 0.3s;
+			}
 
-        <!-- Add 3D text -->
-        <!-- <a-text
-          value="Billiken Rocks!"
-          position="0 0.5 0"
-          rotation="0 0 0"
-          align="center"
-          color="blue"
-          width="2"
-          side="double"
-        ></a-text> -->
+			#markerSelect:hover {
+				background: #111133;
+				box-shadow: 0 0 10px #00ffeeaa;
+			}
 
-        <!-- Speaker -->
-        <a-entity
-          id="speaker"
-          sound="src: #bg-music; autoplay: false; volume: 1"
-          position="0 2 5"
-        ></a-entity>
+			#startAR {
+				margin-top: 20px;
+				font-size: 16px;
+				padding: 12px 28px;
+				border-radius: 10px;
+				border: none;
+				background: #00ffee;
+				color: #000;
+				cursor: pointer;
+				font-weight: bold;
+				box-shadow: 0 0 20px #00ffeeaa;
+				transition: transform 0.2s, box-shadow 0.2s;
+			}
 
-        <a-entity raycaster="objects: .clickable" cursor></a-entity>
+			#startAR:hover {
+				transform: scale(1.05);
+				box-shadow: 0 0 30px #00ffee;
+			}
 
-        <!-- HP---GG -->
-        <a-entity
-          text-geometry="value: Higher Purpose. Greater good.; size: 0.16; height: 0.1; font: https://threejs.org/examples/fonts/optimer_bold.typeface.json"
-          material="color: #003aa7"
-          position="-0.455 -0.53 0"
-          rotation="0 0 0"
-          scale="0.3 0.3 0.3"
-          smooth="true"
-          smoothCount="10"
-          smoothTolerance="0.01"
-          smoothThreshold="5"
-        ></a-entity>
+			@keyframes pulseBox {
+				0%,
+				100% {
+					box-shadow: 0 0 20px #00ffee55;
+				}
+				50% {
+					box-shadow: 0 0 30px #00ffeeaa;
+				}
+			}
 
-        <!-- SLU -->
-        <a-entity
-          text-geometry="value: Saint Louis University; size: 0.24; height: 0.1; font: https://threejs.org/examples/fonts/optimer_bold.typeface.json"
-          material="color: #003aa7"
-          position="-0.48 0.5 0"
-          rotation="0 0 0"
-          scale="0.3 0.3 0.3"
-          smooth="true"
-          smoothCount="10"
-          smoothTolerance="0.01"
-          smoothThreshold="5"
-        ></a-entity>
+			#billiken-inside {
+				width: 100px;
+				margin: 0 auto 20px;
+				animation: floaty 4s ease-in-out infinite;
+				pointer-events: none;
+				filter: drop-shadow(0 0 10px #00ffeeaa);
+			}
 
-        <!-- top -->
-        <a-entity
-          geometry="primitive: box; width: 1; height: 0.03; depth: 0.05"
-          material="color: #003aa7"
-          position="0 0.65 0"
-          smooth="true"
-          smoothCount="10"
-          smoothTolerance="0.01"
-          smoothThreshold="5"
-        ></a-entity>
+			@keyframes floaty {
+				0%,
+				100% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(-10px);
+				}
+			}
+		</style>
+	</head>
 
-        <!-- bottom -->
-        <a-entity
-          geometry="primitive: box; width: 1; height: 0.03; depth: 0.05"
-          material="color: #003aa7"
-          position="0 -0.65 0"
-          smooth="true"
-          smoothCount="10"
-          smoothTolerance="0.01"
-          smoothThreshold="5"
-        ></a-entity>
+	<body>
+		<!-- Marker Selection UI with Billiken -->
+		<div id="marker-ui">
+			<img id="billiken-inside" src="/billiken.png" alt="Billiken Mascot" />
+			<label for="markerSelect">Choose Marker:</label>
+			<select id="markerSelect">
+				<option value="slu1.mind">SLU Marker</option>
+				<option value="tempBilli4.mind">Billiken Marker</option>
+			</select>
+			<br />
+			<button id="startAR">Start AR</button>
+		</div>
 
-        <!-- left -->
-        <a-entity
-          geometry="primitive: box; width: 1.29; height: 0.03; depth: 0.05"
-          material="color: #003aa7"
-          position="-0.5 0 0"
-          rotation="0 0 90"
-          smooth="true"
-          smoothCount="10"
-          smoothTolerance="0.01"
-          smoothThreshold="5"
-        ></a-entity>
+		<script>
+			window.addEventListener("DOMContentLoaded", () => {
+				const startBtn = document.getElementById("startAR");
+				const select = document.getElementById("markerSelect");
+				const ui = document.getElementById("marker-ui");
 
-        <!-- right -->
-        <a-entity
-          geometry="primitive: box; width: 1.29; height: 0.03; depth: 0.05"
-          material="color: #003aa7"
-          position="0.5 0 0"
-          rotation="0 0 90"
-          smooth="true"
-          smoothCount="10"
-          smoothTolerance="0.01"
-          smoothThreshold="5"
-        ></a-entity>
+				startBtn.addEventListener("click", () => {
+					const selectedMind = select.value;
+					ui.style.display = "none";
+					document.body.style.background = "transparent"; // remove dark bg for AR view
 
-        <!-- Center Middle Button -->
-        <a-sphere
-          id="myInteractiveSphere"
-          class="clickable"
-          position="0 0 0"
-          scale="0.15 0.15 0.05"
-          material="src: #customTexture; repeat: 1 1; offset: 0 0"
-          visible="false"
-        >
-        </a-sphere>
+					document.body.innerHTML += `
+						<a-scene
+			mindar-image="imageTargetSrc: /${selectedMind}; showStats: false; uiScanning: yes;"
+			color-space="sRGB"
+			renderer="colorManagement: true, physicallyCorrectLights"
+			vr-mode-ui="enabled: false"
+			device-orientation-permission-ui="enabled: false"
+		>
+							<a-assets>
+				<!-- Replace this with your own model -->
+				<a-asset-item
+					id="customModel"
+					src="/black_leather_chair.gltf"
+				></a-asset-item>
 
-        <!-- LEFT side top option-->
-        <a-entity
-          id="option1"
-          class="clickable"
-          geometry="primitive: plane; width: 0.25; height: 0.1"
-          material="color: #003aa7; opacity: 0.8"
-          position="0 0 0"
-          visible="false"
-          animation__show="property: position; to: -0.2 0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option1"
-          animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option1"
-        >
-          <!-- Icon inside rectangle box -->
-          <a-entity
-            geometry="primitive: circle; radius: 0.04"
-            material="src: #icon"
-            position="0 0 0.01"
-          ></a-entity>
-        </a-entity>
+                <a-asset-item id="optimerFont" src="/optimer_bold.typeface.json"></a-asset-item>
 
-        <!-- LEFT side middle option-->
-        <a-entity
-          id="option2"
-          class="clickable"
-          geometry="primitive: plane; width: 0.25; height: 0.1"
-          material="color: #003aa7; opacity: 0.8"
-          position="0 0 0"
-          visible="false"
-          animation__show="property: position; to: -0.3 0 0; dur: 600; easing: easeOutElastic; startEvents: show-option2"
-          animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option2"
-        >
-          <!-- Icon inside rectangle box -->
-          <a-entity
-            geometry="primitive: circle; radius: 0.04"
-            material="src: #icon"
-            position="0 0 0.01"
-          ></a-entity>
-        </a-entity>
+				<img id="customTexture" src="/cenBilli2.png" />
+				<img id="icon" src="/bill2.jpg" />
+				<img id="icon-web" src="/web icon.png" />
+				<img id="icon-x" src="x-icon.jpg" />
+				<img id="icon-yt" src="yt-icon.png" />
+				<img id="icon-tt" src="TT-icon.png" />
+				<img id="icon-li" src="li-icon.png" />
+				<img id="icon-fb" src="fb-icon.png" />
+				<img id="icon-insta" src="insta-icon.png" />
+				<img id="icon-back" src="/back icon.png" />
+				<img id="icon-left" src="/left-icon.png" />
+				<img id="icon-right" src="/right-icon.png" />
+				<img id="photo1" src="/photo1.jpg" />
+				<img id="photo2" src="/photo2.jpg" />
+				<img id="photo3" src="/photo3.jpg" />
+				<img id="bb-icon" src="/billiken birthdays.png" />
+				<audio id="bg-music" src="/Dreamers.mp3" preload="auto"></audio>
+			</a-assets>
 
-        <!-- LEFT side bottom option-->
-        <a-entity
-          id="option3"
-          class="clickable"
-          geometry="primitive: plane; width: 0.25; height: 0.1"
-          material="color: #003aa7; opacity: 0.8"
-          position="0 0 0"
-          visible="false"
-          animation__show="property: position; to: -0.2 -0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option3"
-          animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option3"
-        >
-          <!-- Icon inside rectangle box -->
-          <a-entity
-            geometry="primitive: circle; radius: 0.04"
-            material="src: #icon"
-            position="0 0 0.01"
-          ></a-entity>
-        </a-entity>
+							<a-camera
+				position="0 0 0"
+				look-controls="enabled: false"
+				cursor="fuse: false; rayOrigin: mouse;"
+				raycaster="far: 10000; objects: .clickable"
+			>
+			</a-camera>
 
-        <!-- RIGHT side top option-->
-        <a-entity
-          id="option4"
-          class="clickable"
-          geometry="primitive: plane; width: 0.25; height: 0.1"
-          material="color: #003aa7; opacity: 0.8"
-          position="0 0 0"
-          visible="false"
-          animation__show="property: position; to: 0.2 0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option4"
-          animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option4"
-        >
-          <!-- Icon inside rectangle box -->
-          <a-entity
-            geometry="primitive: circle; radius: 0.04"
-            material="src: #icon"
-            position="0 0 0.01"
-          ></a-entity>
-        </a-entity>
+							<a-entity
+				mindar-image-target="targetIndex: 0"
+				interactive-cube-manager
+				smooth="true"
+				smoothCount="10"
+				smoothTolerance="0.01"
+				smoothThreshold="5"
+			>
+				<!-- Speaker -->
+				<a-entity
+					id="speaker"
+					sound="src: #bg-music; autoplay: false; volume: 1"
+					position="0 2 5"
+				></a-entity>
 
-        <!-- RIGHT side middle option-->
-        <a-entity
-          id="option5"
-          class="clickable"
-          geometry="primitive: plane; width: 0.25; height: 0.1"
-          material="color: #003aa7; opacity: 0.8"
-          position="0 0 0"
-          visible="false"
-          animation__show="property: position; to: 0.3 0 0; dur: 600; easing: easeOutElastic; startEvents: show-option5"
-          animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option5"
-        >
-          <!-- Icon inside rectangle box -->
-          <a-entity
-            geometry="primitive: circle; radius: 0.04"
-            material="src: #icon"
-            position="0 0 0.01"
-          ></a-entity>
-        </a-entity>
+				<a-entity raycaster="objects: .clickable" cursor></a-entity>
 
-        <!-- RIGHT side top option-->
-        <a-entity
-          id="option6"
-          class="clickable"
-          geometry="primitive: plane; width: 0.25; height: 0.1"
-          material="color: #003aa7; opacity: 0.8"
-          position="0 0 0"
-          visible="false"
-          animation__show="property: position; to: 0.2 -0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option6"
-          animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option6"
-        >
-          <!-- Icon inside rectangle box -->
-          <a-entity
-            geometry="primitive: circle; radius: 0.04"
-            material="src: #icon"
-            position="0 0 0.01"
-          ></a-entity>
-        </a-entity>
+				<!-- HP---GG -->
+				<a-entity
+					text-geometry="value: Higher Purpose. Greater good.; size: 0.16; height: 0.1; font: /optimer_bold.typeface.json"
+					material="color: #003aa7"
+					position="-0.455 -0.53 0"
+					rotation="0 0 0"
+					scale="0.3 0.3 0.3"
+					smooth="true"
+					smoothCount="10"
+					smoothTolerance="0.01"
+					smoothThreshold="5"
+				></a-entity>
 
-        <a-image
-          visible="false"
-          id="web-button"
-          class="clickable"
-          src="#icon-web"
-          position="-0.42 -0.4 0"
-          height="0.10"
-          width="0.10"
-          animation="property: scale; to: 1.2 1.2 1.2; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
-        ></a-image>
+				<!-- SLU -->
+				<a-entity
+					text-geometry="value: Saint Louis University; size: 0.24; height: 0.1; font: #optimerFont"
+					material="color: #003aa7"
+					position="-0.48 0.5 0"
+					rotation="0 0 0"
+					scale="0.3 0.3 0.3"
+					smooth="true"
+					smoothCount="10"
+					smoothTolerance="0.01"
+					smoothThreshold="5"
+				></a-entity>
 
-        <a-image
-          visible="false"
-          id="fb-button"
-          class="clickable"
-          src="#icon-fb"
-          alpha-test="0.5"
-          position="-0.14 -0.4 0"
-          height="0.10"
-          width="0.10"
-          animation="property: scale; to: 1.2 1.2 1.2; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
-        ></a-image>
+				<!-- top -->
+				<a-entity
+					geometry="primitive: box; width: 1; height: 0.03; depth: 0.05"
+					material="color: #C47F06"
+					position="0 0.65 0"
+					smooth="true"
+					smoothCount="10"
+					smoothTolerance="0.01"
+					smoothThreshold="5"
+				></a-entity>
 
-        <a-image
-          visible="false"
-          id="insta-button"
-          class="clickable"
-          src="#icon-insta"
-          position="0.14 -0.4 0"
-          height="0.10"
-          width="0.10"
-          animation="property: scale; to: 1.2 1.2 1.2; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
-        ></a-image>
+				<!-- bottom -->
+				<a-entity
+					geometry="primitive: box; width: 1; height: 0.03; depth: 0.05"
+					material="color: #C47F06"
+					position="0 -0.65 0"
+					smooth="true"
+					smoothCount="10"
+					smoothTolerance="0.01"
+					smoothThreshold="5"
+				></a-entity>
 
-        <a-image
-          visible="false"
-          id="li-button"
-          class="clickable"
-          src="#icon-li"
-          position="0.42 -0.4 0"
-          height="0.10"
-          width="0.10"
-          animation="property: scale; to: 1.2 1.2 1.2; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
-        ></a-image>
+				<!-- left -->
+				<a-entity
+					geometry="primitive: box; width: 1.29; height: 0.03; depth: 0.05"
+					material="color: #C47F06"
+					position="-0.5 0 0"
+					rotation="0 0 90"
+					smooth="true"
+					smoothCount="10"
+					smoothTolerance="0.01"
+					smoothThreshold="5"
+				></a-entity>
 
-        <!-- Photo Display Panel -->
-        <a-image
-          id="photo-viewer"
-          src="#some-photo"
-          width="0.6"
-          height="0.4"
-          position="0 0 0.1"
-          visible="false"
-        ></a-image>
+				<!-- right -->
+				<a-entity
+					geometry="primitive: box; width: 1.29; height: 0.03; depth: 0.05"
+					material="color: #C47F06"
+					position="0.5 0 0"
+					rotation="0 0 90"
+					smooth="true"
+					smoothCount="10"
+					smoothTolerance="0.01"
+					smoothThreshold="5"
+				></a-entity>
 
-        <!-- Left Nav Button -->
-        <a-image
-          id="photo-prev"
-          src="#icon-left"
-          width="0.05"
-          height="0.05"
-          position="-0.35 0 0.1"
-          class="clickable"
-          visible="false"
-        ></a-image>
+				<!-- Center Middle Button -->
+				<a-sphere
+					id="myInteractiveSphere"
+					class="clickable"
+					position="0 0 0"
+					scale="0.15 0.15 0.05"
+					material="src: #customTexture; repeat: 1 1; offset: 0 0"
+					visible="false"
+				>
+				</a-sphere>
 
-        <!-- Right Nav Button -->
-        <a-image
-          id="photo-next"
-          src="#icon-right"
-          width="0.05"
-          height="0.05"
-          position="0.35 0 0.1"
-          class="clickable"
-          visible="false"
-        ></a-image>
+				<!-- LEFT side top option-->
+				<a-entity
+					id="option1"
+					class="clickable"
+					geometry="primitive: plane; width: 0.25; height: 0.1"
+					material="color: #003aa7; opacity: 0.8"
+					position="0 0 0"
+					visible="false"
+					animation__show="property: position; to: -0.2 0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option1"
+					animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option1"
+				>
+					<!-- Icon inside rectangle box -->
+					<a-entity
+						geometry="primitive: circle; radius: 0.04"
+						material="src: #icon"
+						position="0 0 0.01"
+					></a-entity>
+				</a-entity>
 
-        <!-- Back Button -->
-        <a-image
-          id="photo-back"
-          src="#icon-back"
-          width="0.1"
-          height="0.05"
-          position="0 0.25 0.1"
-          class="clickable"
-          visible="false"
-        ></a-image>
-      </a-entity>
-    </a-scene>
+				<!-- LEFT side middle option-->
+				<a-entity
+					id="option2"
+					class="clickable"
+					geometry="primitive: plane; width: 0.25; height: 0.1"
+					material="color: #003aa7; opacity: 0.8"
+					position="0 0 0"
+					visible="false"
+					animation__show="property: position; to: -0.3 0 0; dur: 600; easing: easeOutElastic; startEvents: show-option2"
+					animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option2"
+				>
+					<!-- Icon inside rectangle box -->
+					<a-entity
+						geometry="primitive: circle; radius: 0.04"
+						material="src: #icon"
+						position="0 0 0.01"
+					></a-entity>
+				</a-entity>
 
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+				<!-- LEFT side bottom option-->
+				<a-entity
+					id="option3"
+					class="clickable"
+					material="src: #bb-icon"
+					geometry="primitive: plane; width: 0.25; height: 0.1"
+					material="color: #003aa7; opacity: 0.8"
+					position="0 0 0"
+					visible="false"
+					animation__show="property: position; to: -0.2 -0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option3"
+					animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option3"
+				>
+				</a-entity>
+
+				<!-- RIGHT side top option-->
+				<a-entity
+					id="option4"
+					class="clickable"
+					geometry="primitive: plane; width: 0.25; height: 0.1"
+					material="color: #003aa7; opacity: 0.8"
+					position="0 0 0"
+					visible="false"
+					animation__show="property: position; to: 0.2 0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option4"
+					animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option4"
+				>
+					<!-- Icon inside rectangle box -->
+					<a-entity
+						geometry="primitive: circle; radius: 0.04"
+						material="src: #icon"
+						position="0 0 0.01"
+					></a-entity>
+				</a-entity>
+
+				<!-- RIGHT side middle option-->
+				<a-entity
+					id="option5"
+					class="clickable"
+					geometry="primitive: plane; width: 0.25; height: 0.1"
+					material="color: #003aa7; opacity: 0.8"
+					position="0 0 0"
+					visible="false"
+					animation__show="property: position; to: 0.3 0 0; dur: 600; easing: easeOutElastic; startEvents: show-option5"
+					animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option5"
+				>
+					<!-- Icon inside rectangle box -->
+					<a-entity
+						geometry="primitive: circle; radius: 0.04"
+						material="src: #icon"
+						position="0 0 0.01"
+					></a-entity>
+				</a-entity>
+
+				<!-- RIGHT side top option-->
+				<a-entity
+					id="option6"
+					class="clickable"
+					geometry="primitive: plane; width: 0.25; height: 0.1"
+					material="color: #003aa7; opacity: 0.8"
+					position="0 0 0"
+					visible="false"
+					animation__show="property: position; to: 0.2 -0.2 0; dur: 600; easing: easeOutElastic; startEvents: show-option6"
+					animation__hide="property: position; to: 0 0 0; dur: 600; easing: easeInOutQuad; startEvents: hide-option6"
+				>
+					<!-- Icon inside rectangle box -->
+					<a-entity
+						geometry="primitive: circle; radius: 0.04"
+						material="src: #icon"
+						position="0 0 0.01"
+					></a-entity>
+				</a-entity>
+
+				<a-image
+					visible="false"
+					id="web-button"
+					class="clickable"
+					src="#icon-web"
+					position="-0.42 -0.4 0"
+					height="0.10"
+					width="0.10"
+					animation="property: scale; to: 1.2 1.2 1.2; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
+				></a-image>
+
+				<a-image
+					visible="false"
+					id="fb-button"
+					class="clickable"
+					src="#icon-fb"
+					alpha-test="0.5"
+					position="-0.14 -0.4 0"
+					height="0.10"
+					width="0.10"
+					animation="property: scale; to: 1.2 1.2 1.2; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
+				></a-image>
+
+				<a-image
+					visible="false"
+					id="insta-button"
+					class="clickable"
+					src="#icon-insta"
+					position="0.14 -0.4 0"
+					height="0.10"
+					width="0.10"
+					animation="property: scale; to: 1.2 1.2 1.2; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
+				></a-image>
+
+				<a-image
+					visible="false"
+					id="li-button"
+					class="clickable"
+					src="#icon-li"
+					position="0.42 -0.4 0"
+					height="0.10"
+					width="0.10"
+					animation="property: scale; to: 1.2 1.2 1.2; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
+				></a-image>
+
+				<!-- Photo Display Panel -->
+				<a-image
+					id="photo-viewer"
+					src=""
+					width="0.6"
+					height="0.4"
+					position="0 0 0.1"
+					visible="false"
+				></a-image>
+
+				<a-entity
+					text-geometry="value: Happy Birthday Billiken!; size: 0.24; height: 0.1; font: https://threejs.org/examples/fonts/optimer_bold.typeface.json"
+					id="bday-text"
+					visible="false"
+					material="color: #FFA500"
+					position="-0.25 0.22 0"
+					rotation="0 0 0"
+					scale="0.15 0.15 0.15"
+					smooth="true"
+					smoothCount="10"
+					smoothTolerance="0.01"
+					smoothThreshold="5"
+				></a-entity>
+
+				<!-- Left Nav Button -->
+				<a-image
+					id="photo-prev"
+					src="#icon-left"
+					width="0.05"
+					height="0.05"
+					position="-0.35 0 0.1"
+					class="clickable"
+					visible="false"
+				></a-image>
+
+				<!-- Right Nav Button -->
+				<a-image
+					id="photo-next"
+					src="#icon-right"
+					width="0.05"
+					height="0.05"
+					position="0.35 0 0.1"
+					class="clickable"
+					visible="false"
+				></a-image>
+
+				<!-- Back Button -->
+				<a-image
+					id="photo-back"
+					src="#icon-back"
+					scale="0.1 0.1 0.1"
+					position="-0.3 0.3 0.1"
+					class="clickable"
+					visible="false"
+				></a-image>
+			</a-entity>
+		</a-scene>
+					`;
+				});
+			});
+		</script>
+		<script type="module" src="/src/main.js"></script>
+	</body>
 </html>
