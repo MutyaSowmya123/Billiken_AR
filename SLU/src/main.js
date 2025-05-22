@@ -96,9 +96,25 @@ AFRAME.registerComponent("interactive-cube-manager", {
 		const photoBack = document.querySelector("#photo-back");
 		const photoNext = document.querySelector("#photo-next");
 		const photoPrev = document.querySelector("#photo-prev");
+		const audioToggle = document.querySelector("#audio-toggle");
 		// const speakerEntity = document.querySelector("#speaker");
 		const audio = document.querySelector("#bg-music");
+		let manualAudioEnabled = true;
 		let music = false;
+
+		audioToggle.addEventListener("click", () => {
+			if (audio.paused) {
+				audio.play();
+				audioToggle.setAttribute("src", "#icon-sound-on");
+				music = true;
+				manualAudioEnabled = true;
+			} else {
+				audio.pause();
+				audioToggle.setAttribute("src", "#icon-sound-off");
+				music = false;
+				manualAudioEnabled = false;
+			}
+		});
 
 		// Check if the cube was found
 		if (!menuEntity) {
@@ -138,9 +154,9 @@ AFRAME.registerComponent("interactive-cube-manager", {
 
 		// Event listener for click events on the cube
 		menuEntity.addEventListener("click", function () {
-			console.log("Cube clicked!");
+			console.log("Menu button clicked!");
 
-			if (audio.paused) {
+			if (audio.paused && manualAudioEnabled) {
 				audio
 					.play()
 					.then(() => {
@@ -292,6 +308,8 @@ AFRAME.registerComponent("interactive-cube-manager", {
 						popupIds.forEach((id) => {
 							const el = document.querySelector(`#${id}`);
 							el.addEventListener("animationcomplete__hide", () => {
+								// audioToggle.setAttribute("src", "#icon-sound-off");
+								audioToggle.setAttribute("visible", false);
 								if (!isExpanded) {
 									el.setAttribute("visible", false);
 								}
@@ -299,6 +317,8 @@ AFRAME.registerComponent("interactive-cube-manager", {
 						});
 					}
 					isExpanded = !isExpanded;
+					audioToggle.setAttribute("visible", true);
+					// audioToggle.setAttribute("src", "#icon-sound-on");
 				};
 				toggleMenu();
 			} else {

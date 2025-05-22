@@ -171,6 +171,8 @@
 				<img id="photo3" src="/photo3.jpg" />
 				<img id="bb-icon" src="/billiken birthdays.png" />
 				<audio id="bg-music" src="/Dreamers.mp3" preload="auto"></audio>
+                <img id="icon-sound-on" src="/sound-on.png" />
+                <img id="icon-sound-off" src="/sound-off.png" />
 			</a-assets>
 
 							<a-camera
@@ -280,6 +282,18 @@
 					visible="false"
 				>
 				</a-sphere>
+
+                <!-- music toggle -->
+                <a-image
+                    id="audio-toggle"
+                    class="clickable"
+                    src="#icon-sound-on"
+                    position="0.40 0.40 0"
+                    width="0.08"
+                    height="0.08"
+                    visible="false"
+                    ></a-image>
+
 
 				<!-- LEFT side top option-->
 				<a-entity
